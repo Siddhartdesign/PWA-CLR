@@ -98,6 +98,18 @@
         opacity: 1;
         pointer-events: auto;
     }
+    /* Improve ghost button visibility on laptops only */
+@media (min-width: 900px) {
+    #ghost-btn {
+        opacity: 0.45;    /* slightly more visible */
+        width: 26px;      /* slightly easier to click */
+        height: 26px;
+    }
+
+    #ghost-btn:hover {
+        opacity: 0.9;     /* full reveal on hover */
+    }
+}
 </style>
 
 </head>
