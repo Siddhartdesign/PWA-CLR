@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Big Time Clock</title>
+
+<!-- MODAK Typeface -->
+<link href="https://fonts.googleapis.com/css2?family=Modak&display=swap" rel="stylesheet">
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="manifest.json">
+
+<!-- iOS Support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        background: black;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Modak', cursive;
+        overflow: hidden;
+    }
+
+    .clock {
+        font-size: 22vw; /* large Modak font */
+        letter-spacing: -0.05em;
+        display: flex;
+        gap: 0.04em;
+    }
+
+    .seconds {
+        display: inline-block;
+        width: 0.8em;
+        text-align: center;
+        animation: pulse 1s linear infinite;
+    }
+
+    @keyframes pulse {
+        0%   { opacity: 1; transform: scale(1); }
+        60%  { opacity: 0; transform: scale(0.85); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+</style>
+
+</head>
+
+<body>
+
+<div class="clock">
+    <span id="hours">00</span>:
+    <span id="minutes">00</span>:
+    <span id="seconds" class="seconds">00</span>
+</div>
+
+<script>
+// PWA service worker registration
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js');
+}
+
+function updateClock() {
+    let now = new Date();
+
+    let h = String(now.getHours()).padStart(2, '0');
+    let m = String(now.getMinutes()).padStart(2, '0');
+    let s = String(now.getSeconds()).padStart(2, '0');
+
+    document.getElementById("hours").textContent = h;
+    document.getElementById("minutes").textContent = m;
+    document.getElementById("seconds").textContent = s;
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+</script>
+
+</body>
+</html>
