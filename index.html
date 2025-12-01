@@ -27,10 +27,11 @@
         align-items: center;
         font-family: 'Modak', cursive;
         overflow: hidden;
+        transition: background 0.4s ease, color 0.4s ease;
     }
 
     .clock {
-        font-size: 22vw; /* large Modak font */
+        font-size: 22vw;
         letter-spacing: -0.05em;
         display: flex;
         gap: 0.04em;
@@ -48,17 +49,82 @@
         60%  { opacity: 0; transform: scale(0.85); }
         100% { opacity: 1; transform: scale(1); }
     }
+
+    /* Ghost Button */
+    #ghost-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 22px;
+        height: 22px;
+        background: rgba(255,255,255,0.12);
+        border-radius: 50%;
+        opacity: 0.25;
+        transition: opacity 0.3s;
+        z-index: 20;
+    }
+
+    /* Color Menu */
+    #color-menu {
+        position: fixed;
+        bottom: 60px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s ease;
+        z-index: 30;
+    }
+
+    .color-dot {
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        cursor: pointer;
+        border: 2px solid rgba(255,255,255,0.4);
+        animation: breathe 2s infinite ease-in-out;
+    }
+
+    @keyframes breathe {
+        0%   { transform: scale(1); opacity: 0.55; }
+        50%  { transform: scale(1.18); opacity: 1; }
+        100% { transform: scale(1); opacity: 0.55; }
+    }
+
+    /* Menu visible */
+    #color-menu.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
 </style>
 
 </head>
 
 <body>
 
+<!-- CLOCK -->
 <div class="clock">
     <span id="hours">00</span>:
     <span id="minutes">00</span>:
     <span id="seconds" class="seconds">00</span>
 </div>
+
+<!-- Ghost Button -->
+<div id="ghost-btn"></div>
+
+<!-- Color Picker Menu -->
+<div id="color-menu">
+    <div class="color-dot" data-color="#ffffff" data-bg="#000000"></div>
+    <div class="color-dot" data-color="#000000" data-bg="#ffffff"></div>
+    <div class="color-dot" data-color="#00eaff" data-bg="#00141a"></div>
+    <div class="color-dot" data-color="#39ff14" data-bg="#061a00"></div>
+    <div class="color-dot" data-color="#ff0077" data-bg="#1a0010"></div>
+    <div class="color-dot" data-color="#ff9100" data-bg="#1a0d00"></div>
+    <div class="color-dot" data-color="#b400ff" data-bg="#15001a"></div>
+</div>
+
 
 <script>
 // PWA service worker registration
@@ -66,6 +132,7 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js');
 }
 
+// Clock function
 function updateClock() {
     let now = new Date();
 
@@ -80,6 +147,40 @@ function updateClock() {
 
 setInterval(updateClock, 1000);
 updateClock();
+
+
+// COLOR PICKER LOGIC
+const ghostBtn = document.getElementById("ghost-btn");
+const colorMenu = document.getElementById("color-menu");
+const colorDots = document.querySelectorAll(".color-dot");
+
+let hideTimer = null;
+
+// Show color menu
+ghostBtn.addEventListener("click", () => {
+    colorMenu.classList.add("active");
+
+    // Auto-hide after 5 seconds
+    if (hideTimer) clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => {
+        colorMenu.classList.remove("active");
+    }, 5005);
+});
+
+// Apply selected color theme
+colorDots.forEach(dot => {
+    dot.style.background = dot.dataset.color;
+
+    dot.addEventListener("click", () => {
+        const textColor = dot.dataset.color;
+        const bgColor = dot.dataset.bg;
+
+        document.body.style.color = textColor;
+        document.body.style.background = bgColor;
+
+        colorMenu.classList.remove("active");
+    });
+});
 </script>
 
 </body>
