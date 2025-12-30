@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.siddhartdesign.modakclock",
+      "sha256_cert_fingerprints": [
+        "FD:1F:0B:49:D6:83:31:79:D0:FF:45:DE:BB:D8:29:46:47:CA:E7:1B:2A:92:B6:15:A3:10:86:5E:48:9A:B6:AB"
+      ]
+    }
+  }
+]
